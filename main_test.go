@@ -3,12 +3,12 @@ package main
 import (
 	"bytes"
 	"os"
+	"strings"
 	"testing"
 )
 
 const (
 	inputFile  = "./testdata/test1.md"
-	resultFile = "test1.md.html"
 	goldenFile = "./testdata/test1.md.html"
 )
 
@@ -32,9 +32,13 @@ func TestParseContent(t *testing.T) {
 }
 
 func TestRun(t *testing.T) {
-	if err := run(inputFile); err != nil {
+	var mockStdOut bytes.Buffer
+
+	if err := run(inputFile, &mockStdOut); err != nil {
 		t.Fatal(err)
 	}
+
+	resultFile := strings.TrimSpace(mockStdOut.String())
 
 	result, err := os.ReadFile(resultFile)
 	if err != nil {
